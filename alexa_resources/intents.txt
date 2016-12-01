@@ -1,0 +1,40 @@
+	{
+	  "intents": [
+	    {
+	      "intent": "AskRegularIntent",
+	      "slots": [
+	        {
+	          "name": "SalaryCommuteChoice",
+	          "type": "COMMUTE_TYPES"
+	        },
+            {
+	          "name": "SalaryChoice",
+	          "type": "SALARY_CHOICES"
+	        },
+            {
+	          "name": "SalaryPeriod",
+	          "type": "SALARY_PERIOD"
+	        },
+            {
+	          "name": "SalaryValue",
+	          "type": "AMAZON.NUMBER"
+	        }
+	      ]
+	    },
+	    {
+	      "intent": "AMAZON.RepeatIntent"
+	    },
+	    {
+	      "intent": "AMAZON.StartOverIntent"
+	    },        
+	    {
+	      "intent": "AMAZON.HelpIntent"
+	    },
+	    {
+	      "intent": "AMAZON.StopIntent"
+	    },
+	    {
+	      "intent": "AMAZON.CancelIntent"
+	    }
+	  ]
+    }

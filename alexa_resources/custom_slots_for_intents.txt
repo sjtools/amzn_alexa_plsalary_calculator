@@ -1,0 +1,5 @@
+#Custom slots to configure to match intent definitions:
+
+COMMUTE_TYPES	regular | extended
+SALARY_CHOICES	net | gross | be 2 be
+SALARY_PERIOD	monthly | annual

@@ -1,0 +1,32 @@
+AskRegularIntent how much is {SalaryChoice} from {SalaryValue}
+AskRegularIntent {SalaryChoice}
+AskRegularIntent for {SalaryChoice}
+AskRegularIntent for {SalaryChoice} salary 
+AskRegularIntent {SalaryPeriod}
+AskRegularIntent it is {SalaryPeriod}
+AskRegularIntent it's {SalaryPeriod}
+AskRegularIntent it is {SalaryPeriod} salary
+AskRegularIntent it's {SalaryPeriod} salary
+AskRegularIntent {SalaryCommuteChoice}
+AskRegularIntent it is {SalaryCommuteChoice}
+AskRegularIntent it is {SalaryCommuteChoice} commute cost
+AskRegularIntent it's {SalaryCommuteChoice}
+AskRegularIntent it's {SalaryCommuteChoice} commute cost
+AskRegularIntent commute cost is {SalaryCommuteChoice}
+AskRegularIntent it's {SalaryValue}
+AskRegularIntent it's {SalaryValue} percent
+AskRegularIntent it is {SalaryValue}
+AskRegularIntent it is {SalaryValue} percent
+AskRegularIntent intellectual property rights is {SalaryValue}
+AskRegularIntent intellectual property rights is {SalaryValue} percent
+AskRegularIntent it's {SalaryValue} intellectual property rights
+AskRegularIntent it's {SalaryValue} percent intellectual property rights
+AskRegularIntent it is {SalaryValue} intellectual property rights
+AskRegularIntent it is {SalaryValue} percent intellectual property rights
+AMAZON.StopIntent bye
+AMAZON.StopIntent thanks
+AMAZON.StopIntent thank you
+AMAZON.StopIntent see you
+AMAZON.StopIntent see ya
+AMAZON.StopIntent asta la vista
+AMAZON.StopIntent good-bye
