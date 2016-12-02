@@ -2,6 +2,11 @@ package com.sjtools.plsalarycalculator;
 
 import com.amazon.speech.slu.Intent;
 import com.amazon.speech.slu.Slot;
+import com.amazon.speech.speechlet.Directive;
+import com.amazon.speech.speechlet.interfaces.audioplayer.AudioItem;
+import com.amazon.speech.speechlet.interfaces.audioplayer.PlayBehavior;
+import com.amazon.speech.speechlet.interfaces.audioplayer.Stream;
+import com.amazon.speech.speechlet.interfaces.audioplayer.directive.PlayDirective;
 import com.amazon.speech.speechlet.IntentRequest;
 import com.amazon.speech.speechlet.LaunchRequest;
 import com.amazon.speech.speechlet.Session;
@@ -10,16 +15,20 @@ import com.amazon.speech.speechlet.SessionStartedRequest;
 import com.amazon.speech.speechlet.Speechlet;
 import com.amazon.speech.speechlet.SpeechletException;
 import com.amazon.speech.speechlet.SpeechletResponse;
+import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
+import com.amazon.speech.ui.SsmlOutputSpeech;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -105,7 +114,7 @@ public class PLCalcSpeechlet implements Speechlet {
 	public SpeechletResponse onLaunch(LaunchRequest request, Session session) throws SpeechletException {
         
 		return SpeechletResponse.newAskResponse(
-				getResponse(WELCOME_STRING), getReprompt(REPROMPT_DEFAULT));
+				getResponse(false, WELCOME_STRING), getReprompt(false, REPROMPT_DEFAULT));
 	}
 
 	@Override
@@ -156,7 +165,7 @@ public class PLCalcSpeechlet implements Speechlet {
 		if ("AMAZON.StopIntent".equals(intentName) || 
 				("AMAZON.CancelIntent".equals(intentName))) 
 	    {
-	        return SpeechletResponse.newTellResponse(getResponse("Goodbye"));
+	        return SpeechletResponse.newTellResponse(getResponse(false,"Goodbye"));
 	    } 
 		throw new SpeechletException("Invalid intent name:" + intentName);
 	}
@@ -265,9 +274,9 @@ public class PLCalcSpeechlet implements Speechlet {
 			{//data collection finished, show me the money now :-)
 				String response = showMeTheMoney(calcData); 
 				clearCalcData(session, calcData); //prepare to start over
-				return getHelpResponse(
+				return getMoneyResponse(
 						response, 
-						REPROMPT_DEFAULT);
+						"What salary do you have in mind?");
 			}
 			else
 			{// ask for new current step data
@@ -752,24 +761,59 @@ public class PLCalcSpeechlet implements Speechlet {
 	}
 
 
-	private SpeechletResponse getHelpResponse(String resp, String reprompt) 
+	private SpeechletResponse getMoneyResponse(String resp, String reprompt) 
 	{
-		return SpeechletResponse.newAskResponse(
-				getResponse(resp), getReprompt(reprompt));
+		SpeechletResponse s = getHelpResponse(true, "<audio src=\"https://s3.amazonaws.com/lambda-function-bucket-us-east-1-sjtools/atmsound.mp3\"/> " + resp, 
+												false, reprompt);
+									
+	/*	PlayDirective d = new PlayDirective();
+		d.setPlayBehavior(PlayBehavior.ENQUEUE);
+		AudioItem a = new AudioItem();
+		Stream st = new Stream();
+		st.set
+		st.setOffsetInMilliseconds(0);
+		st.setUrl("https://s3.amazonaws.com/lambda-function-bucket-us-east-1-sjtools/atmsound.mp3");
+		st.setToken("ATM_Machine_sound_token");
+		a.setStream(st);
+		d.setAudioItem(a);
+		ArrayList<Directive> toplay = new ArrayList<Directive>();
+		toplay.add(d);
+		s.setDirectives(toplay);
+		*/
+		
+		return s;
 	}
 
-	private PlainTextOutputSpeech getResponse(String message)
+	private SpeechletResponse getHelpResponse(String resp, String reprompt) 
+	{
+		return getHelpResponse(false, resp, false, reprompt);
+	}
+	private SpeechletResponse getHelpResponse(boolean isSSMLResp, String resp, boolean isSSMLRepr, String reprompt) 
+	{
+		SpeechletResponse s = new SpeechletResponse();
+		return SpeechletResponse.newAskResponse(
+				getResponse(isSSMLResp,resp), getReprompt(isSSMLRepr, reprompt));
+	}
+	private SsmlOutputSpeech getSSML(String message)
+	{
+		SsmlOutputSpeech s = new SsmlOutputSpeech();
+		s.setSsml("<speak>"+ message + "</speak>");
+		return s;
+	}
+	private PlainTextOutputSpeech getPlainText(String message)
 	{
 		PlainTextOutputSpeech resp = new PlainTextOutputSpeech();
 		resp.setText(message);
-		return resp;
+		return resp;		
 	}
-	private  Reprompt getReprompt(String message)
+	private OutputSpeech getResponse(boolean isSSML, String message)
 	{
-		PlainTextOutputSpeech resp = new PlainTextOutputSpeech();
-		resp.setText(message);		
+		return isSSML ? getSSML(message) : getPlainText(message);
+	}
+	private  Reprompt getReprompt(boolean isSSML, String message)
+	{
 		Reprompt rep = new Reprompt();
-		rep.setOutputSpeech(resp);
+		rep.setOutputSpeech(isSSML ? getSSML(message) : getPlainText(message));
 		return rep;
 	}
 	
